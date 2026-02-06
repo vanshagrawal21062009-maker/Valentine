@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💘</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff7eb3, #ff4d6d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Card */
+.box {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  text-align: center;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  position: relative;
+  animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Shake */
+.shake {
+  animation: shake 0.3s;
+}
+@keyframes shake {
+  0% { transform: translate(0); }
+  25% { transform: translate(-5px, 5px); }
+  50% { transform: translate(5px, -5px); }
+  75% { transform: translate(-5px, -5px); }
+  100% { transform: translate(0); }
+}
+
+h1 {
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+/* Glow name */
+.name {
+  color: #ff2d55;
+  animation: glow 1.5s infinite alternate;
+}
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ff4d6d; }
+  to { text-shadow: 0 0 18px #ff99ac; }
+}
+
+.buttons {
+  margin-top: 20px;
+  position: relative;
+  height: 90px;
+}
+
+button {
+  padding: 12px 22px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+  transition: transform 0.2s;
+}
+
+#no {
+  background: #adb5bd;
+  color: white;
+  position: absolute;
+  right: 0;
+}
+
+/* Success */
+#success {
+  display: none;
+  color: white;
+  font-size: 34px;
+  text-align: center;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Floating effects */
+.heart, .sparkle, .confetti {
+  position: fixed;
+  bottom: -20px;
+  pointer-events: none;
+  animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0) rotate(0deg); opacity: 1; }
+  to { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="card">
+  <h1>
+    Will you be my Valentine,
+    <span class="name">Krishna</span>? 💖
+  </h1>
+
+  <div class="buttons">
+    <button id="yes">Yes 💘</button>
+    <button id="no">No 😶</button>
+  </div>
+</div>
+
+<div id="success">YAYYY 💕🎉</div>
+
+<audio id="noSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<audio id="yesSound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const card = document.getElementById("card");
+  const success = document.getElementById("success");
+  const noSound = document.getElementById("noSound");
+  const yesSound = document.getElementById("yesSound");
+
+  let yesScale = 1;
+
+  noBtn.addEventListener("click", () => {
+    noSound.currentTime = 0;
+    noSound.play();
+
+    card.classList.add("shake");
+    setTimeout(() => card.classList.remove("shake"), 300);
+
+    noBtn.style.left = Math.random() * 70 + "%";
+    noBtn.style.top = Math.random() * 60 + "%";
+
+    yesScale += 0.05;
+    yesBtn.style.transform = `scale(${yesScale})`;
+  });
+
+  yesBtn.addEventListener("click", () => {
+    yesSound.play();
+    card.style.display = "none";
+    success.style.display = "block";
+    hearts();
+    sparkles();
+    confetti();
+  });
+
+  function hearts() {
+    setInterval(() => create("💖", "heart", 4000, 18, 30), 250);
+  }
+
+  function sparkles() {
+    setInterval(() => create("✨", "sparkle", 2500, 14, 22), 180);
+  }
+
+  function confetti() {
+    setInterval(() => {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.innerHTML = "🎉";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.fontSize = 14 + Math.random() * 20 + "px";
+      c.style.animationDuration = "3s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3000);
+    }, 120);
+  }
+
+  function create(symbol, cls, time, min, max) {
+    const e = document.createElement("div");
+    e.className = cls;
+    e.innerHTML = symbol;
+    e.style.left = Math.random() * 100 + "vw";
+    e.style.fontSize = min + Math.random() * (max - min) + "px";
+    e.style.animationDuration = time / 1000 + "s";
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), time);
+  }
+
+});
+</script>
+
+</body>
+</html>
